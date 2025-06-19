@@ -26,7 +26,7 @@ def display_menu(options: list[str]) -> None:
     for i, opt in enumerate(options, start=1):
         print(f"{i}. {opt}") #noqa: T201
 
-def handle_choice(choice: str, config: dict[str, Any]) -> bool:
+def run_choice(choice: str, config: dict[str, Any]) -> bool:
     """Handle the user's choice from the menu."""
     runs = {
         "1": run_ex1,
@@ -66,7 +66,7 @@ def main() -> None:
     while running:
         display_menu(options)
         choice = input("\n👉 Choississez une option : ")
-        running = handle_choice(choice, config)
+        running = run_choice(choice, config)
         if running:
             input("\nAppuyez sur Entrée pour revenir au menu...")
 
