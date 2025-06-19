@@ -18,14 +18,14 @@ def quicksort_random(arr):
 def quicksort_deterministic(arr):
     if len(arr) <= 1:
         return arr
-    pivot = arr[0]  # déterministe
+    pivot = arr[0]
     less = [x for x in arr[1:] if x < pivot]
     greater = [x for x in arr[1:] if x >= pivot]
     return quicksort_deterministic(less) + [pivot] + quicksort_deterministic(greater)
 
 def measure_time(func, arr):
     start = time.perf_counter()
-    result = func(arr[:])  # copie pour ne pas modifier l'original
+    result = func(arr[:])
     end = time.perf_counter()
     return result, end - start
 

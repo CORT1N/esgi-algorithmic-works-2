@@ -40,7 +40,6 @@ def tsp_nearest_neighbor(matrix, start=0):
             visited[nearest] = True
             current = nearest
 
-    # Retour au point de départ
     total_distance += matrix[current][start]
     path.append(start)
 

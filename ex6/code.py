@@ -176,7 +176,6 @@ def run(config):
         logger.error("Aucune séquence d'insertion fournie dans la config.")
         return
 
-    # === AVL ===
     logger.info(f"Test AVL avec séquence d'insertion : {data}")
     root_avl = None
 
