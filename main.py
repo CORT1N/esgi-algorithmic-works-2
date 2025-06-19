@@ -52,13 +52,13 @@ def main() -> None:
     config = load_config()
 
     options = [
-        "Exercice 1",
-        "Exercice 2",
-        "Exercice 3",
-        "Exercice 4",
-        "Exercice 5",
-        "Exercice 6",
-        "Exercice 7",
+        "Exercice 1 - Recherche et parcours de graphes",
+        "Exercice 2 - Algorithme de Dijkstra",
+        "Exercice 3 - Algorithme de Bellman-Ford",
+        "Exercice 4 - Algorithmes de Ford-Fulkerson et Edmonds-Karp",
+        "Exercice 5 - Tri rapide randomisé",
+        "Exercice 6 - Arbres AVL",
+        "Exercice 7 - Problèmes NP-complets et NP-difficiles",
         "Quitter",
     ]
 

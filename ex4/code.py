@@ -42,7 +42,7 @@ def ford_fulkerson(
             graph[v].setdefault(u, 0)
             graph[v][u] += flow
         max_flow += flow
-        logger.debug(f"Chemin trouvé : {path} avec flux = {flow}")
+        logger.info(f"Chemin trouvé : {path} avec flux = {flow}")
 
     return max_flow
 
@@ -89,7 +89,7 @@ def edmonds_karp(
             graph[v].setdefault(u, 0)
             graph[v][u] += flow
         max_flow += flow
-        logger.debug(f"Chemin trouvé : {path} avec flux = {flow}")
+        logger.info(f"Chemin trouvé : {path} avec flux = {flow}")
 
     return max_flow
 
