@@ -1,10 +1,17 @@
 """First exercise."""
+from __future__ import annotations
+
 from collections import deque
 
 from logger import logger
 
 
-def dfs(graph, start, visited=None):
+def dfs(
+    graph: dict[str, list[str]],
+    start: str,
+    visited: set[str] | None = None,
+    ) -> None:
+    """Depth First Search (DFS) algorithm."""
     if visited is None:
         visited = set()
     visited.add(start)
@@ -13,7 +20,8 @@ def dfs(graph, start, visited=None):
         if neighbor not in visited:
             dfs(graph, neighbor, visited)
 
-def bfs(graph, start):
+def bfs(graph: dict[str, list[str]], start: str) -> None:
+    """Breadth First Search (BFS) algorithm."""
     visited = set()
     queue = deque([start])
 
@@ -26,11 +34,12 @@ def bfs(graph, start):
                 if neighbor not in visited:
                     queue.append(neighbor)
 
-def has_cycle_dfs(graph) -> bool:
+def has_cycle_dfs(graph: dict[str, list[str]]) -> bool:
+    """Detect cycles in a directed graph using DFS."""
     visited = set()
     rec_stack = set()
 
-    def dfs_cycle(node) -> bool:
+    def dfs_cycle(node: str) -> bool:
         visited.add(node)
         rec_stack.add(node)
 
@@ -46,7 +55,8 @@ def has_cycle_dfs(graph) -> bool:
 
     return any(node not in visited and dfs_cycle(node) for node in graph)
 
-def connected_components_bfs(graph):
+def connected_components_bfs(graph: dict[str, list[str]]) -> list[list[str]]:
+    """Find connected components in an undirected graph using BFS."""
     visited = set()
     components = []
 
@@ -68,7 +78,8 @@ def connected_components_bfs(graph):
 
     return components
 
-def run(config):
+def run(config: dict) -> None:
+    """Run the graph algorithms."""
     graph = config.get("graph", {})
     if not graph:
         logger.error("Aucun graphe fourni dans la config.")

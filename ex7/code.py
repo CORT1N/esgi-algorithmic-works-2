@@ -1,11 +1,17 @@
 """Seventh exercise."""
 import time
-from itertools import permutations, product
+from collections.abc import Sequence
+from itertools import permutations
+from typing import Any, Callable
 
 from logger import logger
 
 
-def is_satisfiable(clauses, assignment):
+def is_satisfiable(
+    clauses: Sequence[Sequence[str]],
+    assignment: dict[str, bool],
+    ) -> bool:
+    """Check if a given assignment satisfies all clauses in a CNF formula."""
     for clause in clauses:
         satisfied = False
         for literal in clause:
@@ -14,12 +20,17 @@ def is_satisfiable(clauses, assignment):
             if literal.startswith("-"):
                 satisfied |= not value
             else:
-                satisfied |= value
+                satisfied |= bool(value)
         if not satisfied:
             return False
     return True
 
-def tsp_nearest_neighbor(matrix, start=0):
+def tsp_nearest_neighbor(
+    matrix: Sequence[Sequence[float]],
+    start: int = 0,
+    ) -> tuple[list[int], float]:
+    """Approximate solution for the Traveling Salesman Problem."""
+    """Using the nearest neighbor heuristic."""
     n = len(matrix)
     visited = [False] * n
     path = [start]
@@ -45,27 +56,30 @@ def tsp_nearest_neighbor(matrix, start=0):
 
     return path, total_distance
 
-def tsp_brute_force(matrix):
+def tsp_brute_force(matrix: Sequence[Sequence[float]]) -> tuple[list[int], float]:
+    """Exact solution for the Traveling Salesman Problem using brute force."""
     n = len(matrix)
     cities = list(range(n))
-    min_distance = float('inf')
+    min_distance = float("inf")
     best_path = []
 
     for perm in permutations(cities[1:]):
-        path = [0] + list(perm) + [0]
+        path = [0, *list(perm), 0]
         distance = sum(matrix[path[i]][path[i+1]] for i in range(n))
         if distance < min_distance:
             min_distance = distance
             best_path = path
     return best_path, min_distance
 
-def measure_time(func, *args):
+def measure_time(func: Callable[..., Any], *args: object) -> tuple[Any, float]:
+    """Measure the execution time of a function."""
     start = time.perf_counter()
     result = func(*args)
     duration = time.perf_counter() - start
     return result, duration
 
-def run(config):
+def run(config: dict) -> None:
+    """Run the SAT and TSP algorithms."""
     logger.info("Vérification SAT :")
     sat_data = config.get("sat", {})
     clauses = sat_data.get("clauses", [])
@@ -80,13 +94,14 @@ def run(config):
     logger.info("Heuristique TSP (plus proche voisin) :")
     tsp_data = config.get("tsp", {})
     matrix = tsp_data.get("distances", [])
+    matrix_length_limit = 8
     if matrix:
         (approx_result, t_heuristic) = measure_time(tsp_nearest_neighbor, matrix)
         logger.info(f"Chemin heuristique : {approx_result[0]}")
         logger.info(f"Distance heuristique : {approx_result[1]}")
         logger.info(f"Temps heuristique : {t_heuristic:.6f} s")
 
-        if len(matrix) <= 8:
+        if len(matrix) <= matrix_length_limit:
             (brute_result, t_brute) = measure_time(tsp_brute_force, matrix)
             logger.info(f"Chemin optimal (brute force) : {brute_result[0]}")
             logger.info(f"Distance brute force : {brute_result[1]}")

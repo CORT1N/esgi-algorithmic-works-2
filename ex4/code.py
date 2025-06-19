@@ -1,21 +1,32 @@
 """Fourth exercise."""
+from __future__ import annotations
+
 from collections import deque
 from copy import deepcopy
 
 from logger import logger
 
 
-def ford_fulkerson(capacity_graph, source, sink):
+def ford_fulkerson(
+    capacity_graph: dict[str, dict[str, int]],
+    source: str,
+    sink: str,
+    ) -> int:
+    """Ford-Fulkerson algorithm using DFS to find the maximum flow in a flow network."""
     graph = deepcopy(capacity_graph)
     max_flow = 0
 
-    def dfs(path, visited, node):
+    def dfs(
+        path: list[tuple[str, str]],
+        visited: set[str],
+        node: str,
+        ) -> list[tuple[str, str]] | None:
         if node == sink:
             return path
         visited.add(node)
         for neighbor in graph.get(node, {}):
             if neighbor not in visited and graph[node][neighbor] > 0:
-                res = dfs(path + [(node, neighbor)], visited, neighbor)
+                res = dfs([*path, (node, neighbor)], visited, neighbor)
                 if res:
                     return res
         return None
@@ -36,7 +47,12 @@ def ford_fulkerson(capacity_graph, source, sink):
     return max_flow
 
 
-def edmonds_karp(capacity_graph, source, sink):
+def edmonds_karp(
+    capacity_graph: dict[str, dict[str, int]],
+    source: str,
+    sink: str,
+    ) -> int:
+    """Edmonds-Karp algorithm using BFS to find the maximum flow in a flow network."""
     graph = deepcopy(capacity_graph)
     max_flow = 0
 
@@ -78,7 +94,8 @@ def edmonds_karp(capacity_graph, source, sink):
     return max_flow
 
 
-def run(config):
+def run(config: dict) -> None:
+    """Run the Ford-Fulkerson and Edmonds-Karp algorithms."""
     graph = config.get("capacity_graph", {})
     if not graph:
         logger.error("Aucun graphe de capacité fourni dans la config.")

@@ -1,6 +1,7 @@
 """Launcher."""
 import json
 from pathlib import Path
+from typing import Any
 
 from ex1.code import run as run_ex1
 from ex2.code import run as run_ex2
@@ -14,11 +15,40 @@ from logger import logger
 CONFIG_PATH = Path("Config.json")
 BASE_EXO_DIR = "ex"
 
-def load_config():
+def load_config() -> dict[str, Any]:
+    """Load the configuration from the JSON file."""
     with Path.open(CONFIG_PATH) as file:
         return json.load(file)
 
-def main():
+def display_menu(options: list[str]) -> None:
+    """Display the menu options."""
+    print("📘 Menu") #noqa: T201
+    for i, opt in enumerate(options, start=1):
+        print(f"{i}. {opt}") #noqa: T201
+
+def handle_choice(choice: str, config: dict[str, Any]) -> bool:
+    """Handle the user's choice from the menu."""
+    runs = {
+        "1": run_ex1,
+        "2": run_ex2,
+        "3": run_ex3,
+        "4": run_ex4,
+        "5": run_ex5,
+        "6": run_ex6,
+        "7": run_ex7,
+    }
+
+    if choice in runs:
+        runs[choice](config.get(f"ex{choice}", {}))
+        return True
+    if choice == "8":
+        logger.info("À bientôt !")
+        return False
+    logger.error("❌ Option invalide")
+    return True
+
+def main() -> None:
+    """Run the menu and handle user choices."""
     config = load_config()
 
     options = [
@@ -32,38 +62,17 @@ def main():
         "Quitter",
     ]
 
-    while True:
-        print("📘 Menu")
-        for i, opt in enumerate(options):
-            print(f"{i + 1}. {opt}")
-
+    running = True
+    while running:
+        display_menu(options)
         choice = input("\n👉 Choississez une option : ")
-
-        if choice == "1":
-            run_ex1(config.get("ex1", {}))
-        elif choice == "2":
-            run_ex2(config.get("ex2", {}))
-        elif choice == "3":
-            run_ex3(config.get("ex3", {}))
-        elif choice == "4":
-            run_ex4(config.get("ex4", {}))
-        elif choice == "5":
-            run_ex5(config.get("ex5", {}))
-        elif choice == "6":
-            run_ex6(config.get("ex6", {}))
-        elif choice == "7":
-            run_ex7(config.get("ex7", {}))
-        elif choice == "8":
-            logger.info("À bientôt !")
-            break
-        else:
-            logger.error("❌ Option invalide")
-
-        input("\nAppuyez sur Entrée pour revenir au menu...")
+        running = handle_choice(choice, config)
+        if running:
+            input("\nAppuyez sur Entrée pour revenir au menu...")
 
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print()
+        print() #noqa: T201
         logger.info("Interruption manuelle, à bientôt !")
